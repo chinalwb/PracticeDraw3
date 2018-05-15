@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Toast;
 
 public class Practice13GetTextBoundsView extends View {
     Paint paint1 = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -44,24 +45,29 @@ public class Practice13GetTextBoundsView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        int middle = (top + bottom) / 2;
 
-        Rect rect = new Rect();
-        paint2.getTextBounds(text1, 0, text1.length(), rect);
-        rect.top = top;
-        rect.left += 100;
-        rect.right += 100;
-        rect.bottom = bottom;
-        canvas.drawRect(rect, paint1);
-        // canvas.drawRect(50, top, getWidth() - 50, bottom, paint1);
+        canvas.drawRect(50, top, getWidth() - 50, bottom, paint1);
 
         // 使用 Paint.getTextBounds() 计算出文字的显示区域
         // 然后计算出文字的绘制位置，从而让文字上下居中
         // 这种居中算法的优点是，可以让文字精准地居中，分毫不差
 
-//        int middle = (top + bottom) / 2;
-        canvas.drawText(text1, 100, middle, paint2);
-        canvas.drawText(text2, 200, middle, paint2);
+        float ftop = paint2.getFontMetrics().top;
+        float fbottom = paint2.getFontMetrics().bottom;
+        Toast.makeText(getContext(), "ftop = " + ftop + " fbottom = " + fbottom, Toast.LENGTH_LONG).show();
+
+        Rect rect = new Rect();
+        int middle = (top + bottom) / 2;
+        paint2.getTextBounds(text1, 0, text1.length(), rect);
+        int offset = (rect.top + rect.bottom) / 2;
+        canvas.drawText(text1, 100, middle - offset, paint2);
+        paint2.getTextBounds(text2, 0, text2.length(), rect);
+        offset = (rect.top + rect.bottom) / 2;
+        canvas.drawText(text2, 200, middle - offset, paint2);
+
+
+        paint2.getTextBounds(text3, 0, 1, rect);
+        Toast.makeText(getContext(), "rect = " + rect, Toast.LENGTH_LONG).show();
         canvas.drawText(text3, 300, middle, paint2);
         canvas.drawText(text4, 400, middle, paint2);
         canvas.drawText(text5, 500, middle, paint2);
